@@ -11,6 +11,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Link from 'next/link';
+import 'isomorphic-fetch'
+
 
 const styles = theme => ({
   layout: {
@@ -44,6 +46,21 @@ const styles = theme => ({
   },
 });
 
+function loginSubmit(e) {
+  e.preventDefault();
+  var data = {username : e.target.elements.email.value, password : e.target.elements.password.value}
+  fetch('/auth/local', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+  }).then((res) => {
+      res.status === 200 ? '' : ''
+  })
+}
+
 function SignIn(props) {
   const { classes } = props;
 
@@ -56,7 +73,7 @@ function SignIn(props) {
             <LockIcon />
           </Avatar>
           <Typography variant="headline">Sign in</Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={loginSubmit}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input id="email" name="email" autoComplete="email" autoFocus />
@@ -70,7 +87,6 @@ function SignIn(props) {
                 autoComplete="current-password"
               />
             </FormControl>
-            <Link href="/dashboard">
               <Button
                 type="submit"
                 fullWidth
@@ -80,7 +96,6 @@ function SignIn(props) {
               >
                 Sign in
               </Button>
-            </Link>
           </form>
         </Paper>
       </main>

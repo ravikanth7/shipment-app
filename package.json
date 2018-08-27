@@ -16,7 +16,8 @@
     "react-jss": "latest",
     "react-swipeable-views": "^0.12.16",
     "recharts": "^1.1.0",
-    "turf-random": "^3.0.12"
+    "turf-random": "^3.0.12",
+    "isomorphic-fetch": "2.2.1"
   },
   "scripts": {
     "dev": "next",
