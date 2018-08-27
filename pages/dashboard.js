@@ -24,7 +24,7 @@ import BlockchainStepper from '../components/dashboard/horizontal-blockchain-ste
 import PortOperationsContent from '../components/dashboard/port-operations-content';
 import MapOperations from '../components/dashboard/map-operations';
 import Snackbar from '../components/snackbar';
-
+import Router from 'next/router';
 
 import TruckIcon from '@material-ui/icons/LocalShipping';
 import CraneIcon from '@material-ui/icons/Subway';
@@ -51,6 +51,8 @@ import Grid from '@material-ui/core/Grid';
 
 import Input from "@material-ui/core/Input";
 import SearchIcon from '@material-ui/icons/Search';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const drawerWidth = 240;
 
@@ -169,6 +171,8 @@ class Dashboard extends React.Component {
       'Ship to Shore Cranes'
     ],
     selectedStep: {},
+    searchType: "Vessel",
+    searchVal: "",
     checkedTabIndex: 0 // For side filter tabs in Transport
   };
 
@@ -179,6 +183,14 @@ class Dashboard extends React.Component {
     //   });
     // }, 7500);
   }
+
+  handleSelect = event => {
+    this.setState({ searchType: event.target.value });
+  };
+
+  changeSearchVal = event => {
+    this.setState({ searchVal: event.target.value });
+  };
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -504,15 +516,26 @@ class Dashboard extends React.Component {
     this.setState({ checkedTabIndex: index });
   }
 
+  searchClick = () => {
+    const { searchType, searchVal } = this.state;
+    if(searchVal != '') {
+        if(searchType == 'Container') {
+          Router.push(`/dashboard?container=`+searchVal);
+        } else {
+          Router.push(`/dashboard?vessel=`+searchVal);
+        }
+    }
+  }
+
   render() {
     const { classes } = this.props;
-    const { notifications, selectedTab, currentSidebarFilter, checkedFilters, selectedStep } = this.state;
+    const { notifications, selectedTab, currentSidebarFilter, checkedFilters, selectedStep, searchType, searchVal } = this.state;
 
     let content;
 
     switch (selectedTab) {
       case 'container_information_system':
-        content = <ContainerInfoSystemContent classes={classes} clickStep={this.clickStep} selectedStep={selectedStep} />;
+        content = <ContainerInfoSystemContent searchVal={searchVal} changeSearchVal={this.changeSearchVal} searchClick={this.searchClick} handleSelect={this.handleSelect} searchType={searchType} classes={classes} clickStep={this.clickStep} selectedStep={selectedStep} />;
         break;
       case 'map_operations':
         content = <MapOperations />;
@@ -667,7 +690,7 @@ const dummyTimelineInfoMapped = dummyTimelineInfo.map((info, index) => {
   });
 });
 
-const ContainerInfoSystemContent = ({ classes, clickStep, selectedStep }) => (
+const ContainerInfoSystemContent = ({ classes, clickStep, selectedStep, searchType, handleSelect, searchClick, searchVal, changeSearchVal }) => (
   <React.Fragment>
     {/* <Typography variant="display1" gutterBottom>
       Orders
@@ -684,6 +707,17 @@ const ContainerInfoSystemContent = ({ classes, clickStep, selectedStep }) => (
     {/* <HorizontalTimeline content={dummyTimelineInfoMapped}/> */}
     <div style={{marginBottom: 10, textAlign: 'center', backgroundColor: '#BDD7EE', padding: 15, fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'}}>
       <span style={{marginRight: 100}}>Blockchain for Vessel/Container Tracking</span>
+       <Select
+            value={searchType}
+            onChange={handleSelect}
+            inputProps={{
+              name: 'searchtype',
+              id: 'searchtype',
+            }}
+          >
+            <MenuItem value="Vessel">Vessel</MenuItem>
+            <MenuItem value="Container">Container</MenuItem>
+          </Select>
       <Input
         formControlProps={{
           className: classes.margin + " " + classes.search
@@ -694,8 +728,10 @@ const ContainerInfoSystemContent = ({ classes, clickStep, selectedStep }) => (
             "aria-label": "Search"
           }
         }}
+        value = {searchVal}
+        onChange = {changeSearchVal}
       />
-      <Button color="white" aria-label="edit" justIcon round>
+      <Button onClick={searchClick} color="white" aria-label="edit" justIcon round>
         <SearchIcon />
       </Button>
     </div>
@@ -703,7 +739,7 @@ const ContainerInfoSystemContent = ({ classes, clickStep, selectedStep }) => (
     <div style={{marginTop: 50}}/>
     <Grid container spacing={24}>
       <Grid item xs={6}>
-        <EventsTable clickStep={clickStep} />
+        <EventsTable searchType={searchType} searchVal={Router} clickStep={clickStep} />
       </Grid>
       { Object.getOwnPropertyNames(selectedStep).length > 0 && <Grid item xs={6}>
         <FileUploadCard selectedStep={selectedStep} />

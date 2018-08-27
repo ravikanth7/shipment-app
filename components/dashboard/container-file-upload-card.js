@@ -69,19 +69,19 @@ class DetailedExpansionPanel extends React.Component {
       <Paper className={classes.root}>
           <div style={{padding: 30, textAlign: 'center'}}>
           <div style={{margin: 20}}>
-            Step : <b>{selectedStep.label}</b>
+            Step : <b>{selectedStep.taskID}</b>
           </div>
           <div style={{margin: 20}}>
-            Status : <b>{selectedStep.date ? "DONE" : "PENDING"}</b>
+            Status : <b>{selectedStep.finished == "true" ? "DONE" : "PENDING"}</b>
           </div>
 
-          {selectedStep.date &&
+          {selectedStep.finished == "true" &&
           <div style={{margin: 20}}>
-            Date : <b>{selectedStep.date}</b>
+            Date : <b>{selectedStep.completed_at}</b>
           </div>
           }
 
-          {!selectedStep.date &&
+          {selectedStep.finished == "false" &&
             <div>
               <div className={classNames(classes.column, classes.helper)}>
                 <input
