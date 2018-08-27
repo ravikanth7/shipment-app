@@ -11,8 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Link from 'next/link';
-import 'isomorphic-fetch'
-
+import 'isomorphic-fetch';
 
 const styles = theme => ({
   layout: {
@@ -57,7 +56,33 @@ function loginSubmit(e) {
       },
       body: JSON.stringify(data)
   }).then((res) => {
-      res.status === 200 ? '' : ''
+      if(res.status === 200) {
+        debugger;
+          fetch('/static/customs1.card', {
+              method: 'get',
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'blob',
+              },
+          }).then((res) => {
+              debugger;
+              const file = new File([res.blob()], 'myCard.card', {type: 'application/octet-stream', lastModified: Date.now()});      
+              const formData = new FormData();
+              formData.append('card', file);
+              fetch('/api/wallet/import', {
+                  method: 'post',
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  },
+                  body: formData,
+                  credentials: 'include'
+              }).then((res) => {
+                  debugger;
+              });
+          })
+      } else {
+        alert('error');
+      }
   })
 }
 
