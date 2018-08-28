@@ -141,9 +141,9 @@ const styles = theme => ({
 class Dashboard extends React.Component {
   state = {
     open: true,
-    selectedTab: 'container_information_system',
+    selectedTab: 'port_operations',
     notifications: [1],
-    currentSidebarFilter: 'container_information_system',
+    currentSidebarFilter: 'port_operations',
     checkedFilters: [
       //container info system
       'Vessel 1',
@@ -582,25 +582,21 @@ class Dashboard extends React.Component {
                   classNames(
                     selectedTab === 'container_information_system' && classes.selectedTab || ''
                   )
-                }
-                onClick={() => this.setState({ 
-                  selectedTab: 'container_information_system',
-                  currentSidebarFilter: 'container_information_system' 
-                })}
+                }               
               >
-                CONTAINER INFORMATION SYSTEM
+                <a style={{color: 'white', textDecoration: 'none'}} href="http://52.172.133.188:8100/" target="_blank">
+                  CONTAINER INFORMATION SYSTEM
+                </a>
               </Button>
               <Button
                 color="inherit"
                 className={
                   selectedTab === 'map_operations' && classes.selectedTab || ''
                 }
-                onClick={() => this.setState({ 
-                  selectedTab: 'map_operations',
-                  currentSidebarFilter: 'map_operations' 
-                })}
               >
-                MAP OPERATIONS
+                <a style={{color: 'white', textDecoration: 'none'}} href="http://52.172.133.188:8100/" target="_blank">
+                  MAP OPERATIONS
+                </a>                
               </Button>
               <Button
                 color="inherit"
