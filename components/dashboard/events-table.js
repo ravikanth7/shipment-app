@@ -58,7 +58,8 @@ class ToBeAllocatedTable extends React.Component {
 
   setData(v1, v2) {
     if(v1 == 'Container') {
-      fetch('/api/queries/getTasksForContainer?vesselParam='+v2, {
+      this.setState({ container: v2.container });
+      fetch('/api/queries/getTasksForContainer?vesselParam='+v2.container, {
             method: 'get',
             headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -66,10 +67,11 @@ class ToBeAllocatedTable extends React.Component {
             }
       }).then(res => res.json())
       .then((res) => {
-         this.setState({ container: v2, data: res });
+         this.setState({ data: res });
       }) 
     } else {
-      fetch('/api/queries/getTasksForVessel?vesselParam='+v2, {
+      this.setState({ vessel: v2.vessel });
+      fetch('/api/queries/getTasksForVessel?vesselParam='+v2.vessel, {
             method: 'get',
             headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -77,7 +79,7 @@ class ToBeAllocatedTable extends React.Component {
             }
       }).then(res => res.json())
       .then((res) => {
-         this.setState({ vessel: v2, data: res });
+         this.setState({ data: res });
       })      
     }    
   }
